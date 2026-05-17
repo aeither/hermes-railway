@@ -1,0 +1,57 @@
+# Local development mirror of the Railway setup.
+# Run: docker compose up
+# Dashboard: http://localhost:9119
+# Gateway API: http://localhost:8642
+services:
+  hermes:
+    image: nousresearch/hermes-agent:latest
+    container_name: hermes
+    restart: unless-stopped
+    command: gateway run
+    ports:
+      - "8642:8642"
+      - "9119:9119"
+    volumes:
+      - hermes-data:/opt/data
+    env_file:
+      - .env
+    environment:
+      - HERMES_DASHBOARD=1
+      - HERMES_DASHBOARD_HOST=0.0.0.0
+      - HERMES_DASHBOARD_PORT=9119
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+          cpus: "2.0"
+
+  # Uncomment for local vLLM inference
+  # vllm:
+  #   image: vllm/vllm-openai:latest
+  #   container_name: vllm
+  #   command: >
+  #     --model Qwen/Qwen2.5-7B-Instruct
+  #     --served-model-name my-model
+  #     --host 0.0.0.0 --port 8000
+  #   ports:
+  #     - "8000:8000"
+  #   networks:
+  #     - hermes-net
+  #   deploy:
+  #     resources:
+  #       reservations:
+  #         devices:
+  #           - capabilities: [gpu]
+
+volumes:
+  hermes-data:
+    driver: local
+    # To bind-mount a host directory instead:
+    # driver_opts:
+    #   type: none
+    #   o: bind
+    #   device: ~/.hermes
+
+# networks:
+#   hermes-net:
+#     driver: bridge

@@ -1,0 +1,16 @@
+# Local Hermes data — never commit keys or sessions
+.hermes/
+*.env
+!.env.example
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+
+# Logs
+*.log

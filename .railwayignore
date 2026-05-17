@@ -1,0 +1,5 @@
+scripts/
+*.md
+.gitignore
+docker-compose.yml
+.env.example
